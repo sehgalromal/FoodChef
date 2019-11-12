@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FoodChef</string>
+    <!-- Declaring title names for bottom navigation view below -->
+    <string name="search_bottom_navigation_view">Search</string>
+    <string name="shopping_list_bottom_navigation_view">Shopping List</string>
+    <string name="downloads_bottom_navigation_view">Downloads</string>
+    <string name="profile_bottom_navigation_view">Profile</string>
+    <string name="toolbar_settings">Settings</string>
+</resources>
