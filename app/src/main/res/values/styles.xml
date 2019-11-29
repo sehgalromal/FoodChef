@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MaterialButton">
+        <item name="android:background">@drawable/button_round</item>
+        <item name="android:textColorLink">#5F4B4B</item>
+    </style>
+
+    <style name="EditTextForm" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+
+    </style>
+
+
 </resources>

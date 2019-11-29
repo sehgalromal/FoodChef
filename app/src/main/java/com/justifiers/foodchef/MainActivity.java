@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Declare Variables here
     BottomNavigationView bottomNavigation;
-    Toolbar fcTopToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
         // initializing the variables
         bottomNavigation = findViewById(R.id.bottom_navigation_view);
         bottomNavigation.setOnNavigationItemSelectedListener(navListen);
-        fcTopToolbar = findViewById(R.id.fcToolbar);
-        // setting Search as default fragment
-        fcTopToolbar.setTitle("Search");
-        setSupportActionBar(fcTopToolbar);
+//        fcTopToolbar = findViewById(R.id.fcToolbar);
+//        // setting Search as default fragment
+//        fcTopToolbar.setTitle("Search");
+//        setSupportActionBar(fcTopToolbar);
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#865730")));
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SearchFragment())
                 .commit();
@@ -41,9 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.settings, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 
     // listens to the selected navigation item and sets the fragment for it
@@ -54,22 +61,22 @@ public class MainActivity extends AppCompatActivity {
 
             switch(navItem.getItemId()) {
                 case R.id.nav_search:
-                    fcTopToolbar.setTitle("Search");
+//                    fcTopToolbar.setTitle("Search");
                     selectedFrag = new SearchFragment();
                     break;
                 case R.id.nav_downloads:
-                    fcTopToolbar.setTitle("Downloads");
+//                    fcTopToolbar.setTitle("Downloads");
                     selectedFrag = new DownloadsFragment();
                     break;
                 case R.id.nav_shopping_list:
-                    fcTopToolbar.setTitle("Shopping List");
+//                    fcTopToolbar.setTitle("Shopping List");
                     selectedFrag = new ShoppingListFragment();
                     break;
                 case R.id.nav_profile:
-                    fcTopToolbar.setTitle("Profile");
+//                    fcTopToolbar.setTitle("Profile");
                     // make settings visible only for profile fragment
-                    fcTopToolbar.getMenu().findItem(R.id.tool_settings).setVisible(true);
                     selectedFrag = new ProfileFragment();
+//                    selectedFrag = new LoginFragment();
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFrag).commit();
