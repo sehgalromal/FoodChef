@@ -3,6 +3,7 @@ package com.justifiers.foodchef.EditProfile;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -89,8 +90,7 @@ public class EditProfile extends AppCompatActivity {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+                EditProfile.super.onBackPressed();
             }
         });
 
@@ -118,11 +118,8 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(intent);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new LoginFragment())
-                        .commit();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 

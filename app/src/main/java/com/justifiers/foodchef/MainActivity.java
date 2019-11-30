@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
                     selectedFrag = new LoginFragment();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFrag).commit();
+            if(selectedFrag != null){
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFrag).commit();
+            }
             return true;
         }
     };

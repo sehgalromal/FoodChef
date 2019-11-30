@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View signUpView = inflater.inflate(R.layout.sign_up_fragment, container, false);
-
+        setHasOptionsMenu(true);
         firebaseAuth = FirebaseAuth.getInstance();
         sign_up_email_layout = signUpView.findViewById(R.id.sign_up_email_layout);
         sign_up_name_layout = signUpView.findViewById(R.id.sign_up_name_layout);
@@ -138,9 +140,11 @@ public class SignUpFragment extends Fragment {
                                         }
                                     }
                                 });
-                                getActivity().getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, new ProfileFragment())
-                                        .commit();
+                                if(getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new ProfileFragment())
+                                            .commit();
+                                }
                             }
                         }
                     });
@@ -151,8 +155,10 @@ public class SignUpFragment extends Fragment {
         sign_up_login_here.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new LoginFragment()).commit();
+                if(getActivity() != null) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new LoginFragment()).commit();
+                }
             }
         });
 
@@ -160,15 +166,20 @@ public class SignUpFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.tool_settings:
-                Intent i = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(i);
-            default:
-                return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+
+        if (id == R.id.tool_settings) {
+            Intent i = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(i);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -1,15 +1,23 @@
 package com.justifiers.foodchef;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.justifiers.foodchef.BottomNavigationView.ProfileFragment;
 import com.justifiers.foodchef.LoginAndSignUp.LoginFragment;
 
 
@@ -26,6 +34,8 @@ public class SettingsActivity extends AppCompatActivity {
     Button measurements_imperial;
     Button measurements_metric;
     Toolbar sToolbar;
+    FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener authStateListener;
 
 
     @Override
@@ -37,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         content_type_pictures = findViewById(R.id.settings_pictures);
         measurements_imperial = findViewById(R.id.settings_imperial);
         measurements_metric = findViewById(R.id.settings_metric);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         sToolbar = findViewById(R.id.sToolbar);
         sToolbar.setTitle("Settings");
@@ -45,9 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
         sToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new LoginFragment())
-                        .commit();
+                    SettingsActivity.super.onBackPressed();
             }
         });
 
@@ -61,8 +70,8 @@ public class SettingsActivity extends AppCompatActivity {
                 language_builder.setSingleChoiceItems(language_items, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                             language_change.setText(language_items[i]);
-                             dialogInterface.dismiss();
+                        language_change.setText(language_items[i]);
+                        dialogInterface.dismiss();
                     }
                 });
                 AlertDialog lDialog = language_builder.create();

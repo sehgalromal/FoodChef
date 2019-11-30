@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,13 +41,16 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    Toolbar sToolbar;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View profileView = inflater.inflate(R.layout.profile_fragment, container, false);
         setHasOptionsMenu(true);
-
+        sToolbar = profileView.findViewById(R.id.pToolbar);
+        sToolbar.setTitle("Profile");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(sToolbar);
         profile_name = profileView.findViewById(R.id.profile_name);
         profile_image = profileView.findViewById(R.id.profile_image);
         Edit_Profile_button = profileView.findViewById(R.id.edit_profile_button);
@@ -61,23 +66,23 @@ public class ProfileFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("User");
-        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("name").getValue().toString();
-                profile_name.setText(name);
-            }
+        if (user != null) {
+            String userId = user.getUid();
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("User");
+            databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.child("name").getValue().toString();
+                    profile_name.setText(name);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
+                }
+            });
+        }
         return profileView;
     }
 
@@ -93,8 +98,11 @@ public class ProfileFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.tool_settings) {
-            Intent i = new Intent(getActivity(), SettingsActivity.class);
-            startActivity(i);
+            if(getActivity() != null) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                Intent i = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(i);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -103,7 +111,9 @@ public class ProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (firebaseAuth == null) {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+            if (getActivity() != null) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+            }
         }
     }
 }

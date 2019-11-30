@@ -6,6 +6,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.SingleLineTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View loginView =  inflater.inflate(R.layout.login_fragment, container, false);
-
+        setHasOptionsMenu(true);
         lToolbar = loginView.findViewById(R.id.lToolbar);
         lToolbar.setTitle("Profile");
         ((AppCompatActivity) getActivity()).setSupportActionBar(lToolbar);
@@ -85,58 +87,64 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String email = login_email.getText().toString();
-                String password = login_password.getText().toString();
-                firebaseAuth = FirebaseAuth.getInstance();
-                // check if the email is empty
-                if(email.isEmpty()){
-                    // throws error for empty email
-                    login_email.setError("Please enter your email Address");
-                    login_email.requestFocus();
-                } else{
-                    if(!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")){
-                        login_email.setError("Please enter a valid email address only");
+                if (login_email.getText() != null && login_password.getText() != null) {
+                    final String email = login_email.getText().toString();
+                    final String password = login_password.getText().toString();
+                    firebaseAuth = FirebaseAuth.getInstance();
+                    // check if the email is empty
+                    if (email.isEmpty()) {
+                        // throws error for empty email
+                        login_email.setError("Please enter your email Address");
                         login_email.requestFocus();
-                    }
-                }
-                if(password.isEmpty()){
-                    login_password_field.setPasswordVisibilityToggleEnabled(false);
-                    login_password.setError("Please enter your password");
-                } else {
-                    if (password.length() < 8) {
-                        login_password_field.setPasswordVisibilityToggleEnabled(false);
-                        login_password.setError("Please enter atleast 8 characters for password");
-                        login_password.requestFocus();
-                    }
-                }
-                if(!email.isEmpty() && !password.isEmpty() && password.length() > 8 && email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
-                    firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getActivity(), "Login Successful!", Toast.LENGTH_SHORT).show();
-                                getActivity().getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, new ProfileFragment())
-                                        .commit();
-                            }
+                    } else {
+                        if (!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+                            login_email.setError("Please enter a valid email address only");
+                            login_email.requestFocus();
                         }
-                    });
+                    }
+                    if (password.isEmpty()) {
+                        login_password_field.setPasswordVisibilityToggleEnabled(false);
+                        login_password.setError("Please enter your password");
+                    } else {
+                        if (password.length() < 8) {
+                            login_password_field.setPasswordVisibilityToggleEnabled(false);
+                            login_password.setError("Please enter atleast 8 characters for password");
+                            login_password.requestFocus();
+                        }
+                    }
+                    if (!email.isEmpty() && !password.isEmpty() && password.length() > 8 && email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+                        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful() && getActivity() != null) {
+                                    Toast.makeText(getActivity(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                    if(getActivity() != null) {
+                                        getActivity().getSupportFragmentManager().beginTransaction()
+                                                .replace(R.id.fragment_container, new ProfileFragment())
+                                                .commit();
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new SignUpFragment())
-                        .commit();
+                if(getActivity() != null) {
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new SignUpFragment())
+                            .commit();
+                }
             }
         });
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() != null){
+                if(firebaseAuth.getCurrentUser() != null && getActivity() != null){
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new ProfileFragment())
                             .commit();
@@ -150,5 +158,22 @@ public class LoginFragment extends Fragment {
     public void onStart(){
         super.onStart();
         firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.tool_settings) {
+            Intent i = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(i);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

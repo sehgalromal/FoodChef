@@ -1,37 +1,40 @@
 package com.justifiers.foodchef.Recipe;
 
 public class Recipe {
+    private Object ingredients;
+    private String likes;
     private String rImage;
-    private String rname;
-    private String rtime;
-    private String rtype;
+    private String rName;
+    private String rTime;
+    private String rType;
 
-    private String recent_keywords;
+    public Recipe(Object ingredients, String likes, String rImage, String rName, String rTime, String rType) {
+        this.ingredients = ingredients;
+        this.likes = likes;
+        this.rImage = rImage;
+        this.rName = rName;
+        this.rTime = rTime;
+        this.rType = rType;
+    }
 
     public Recipe() {
     }
 
-    public Recipe(String rImage,String rname, String rtime, String rtype) {
-        this.rImage = rImage;
-        this.rname = rname;
-        this.rtime = rtime;
-        this.rtype = rtype;
+
+    public Object getIngredients() {
+        return ingredients;
     }
 
-    public String getRtype() {
-        return rtype;
+    public void setIngredients(Object ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public String getRecent_keywords() {
-        return recent_keywords;
+    public String getLikes() {
+        return likes;
     }
 
-    public void setRecent_keywords(String recent_keywords) {
-        this.recent_keywords = recent_keywords;
-    }
-
-    public void setRtype(String rtype) {
-        this.rtype = rtype;
+    public void setLikes(String likes) {
+        this.likes = likes;
     }
 
     public String getrImage() {
@@ -42,19 +45,27 @@ public class Recipe {
         this.rImage = rImage;
     }
 
-    public String getRname() {
-        return rname;
+    public String getrName() {
+        return rName;
     }
 
-    public void setRname(String rname) {
-        this.rname = rname;
+    public void setrName(String rName) {
+        this.rName = rName;
     }
 
-    public String getRtime() {
-        return rtime;
+    public String getrTime() {
+        return rTime;
     }
 
-    public void setRtime(String rtime) {
-        this.rtime = rtime;
+    public void setrTime(String rTime) {
+        this.rTime = rTime;
+    }
+
+    public String getRType() {
+        return rType;
+    }
+
+    public void setRType(String RType) {
+        this.rType = RType;
     }
 }
