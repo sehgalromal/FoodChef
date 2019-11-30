@@ -11,30 +11,73 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.justifiers.foodchef.EditProfile.EditProfile;
+import com.justifiers.foodchef.LoginAndSignUp.LoginFragment;
 import com.justifiers.foodchef.R;
 import com.justifiers.foodchef.SettingsActivity;
 
 public class ProfileFragment extends Fragment {
 
-    Toolbar toolbar;
+    Button Edit_Profile_button;
+    TextView profile_name;
+    ImageView profile_image;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View profileView = inflater.inflate(R.layout.profile_fragment, container, false);
         setHasOptionsMenu(true);
-        toolbar =  profileView.findViewById(R.id.toolbar);
-        toolbar.setSubtitle("Profile");
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        profile_name = profileView.findViewById(R.id.profile_name);
+        profile_image = profileView.findViewById(R.id.profile_image);
+        Edit_Profile_button = profileView.findViewById(R.id.edit_profile_button);
+        Edit_Profile_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (firebaseAuth != null) {
+                    Intent i = new Intent(getActivity(), EditProfile.class);
+                    startActivity(i);
+                }
+            }
+        });
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("User");
+        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                profile_name.setText(name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         return profileView;
     }
 
@@ -42,7 +85,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.settings, menu);
-        MenuItem item = menu.findItem(R.id.tool_settings);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -55,5 +97,13 @@ public class ProfileFragment extends Fragment {
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (firebaseAuth == null) {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.justifiers.foodchef.LoginAndSignUp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.SingleLineTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,24 +16,33 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.justifiers.foodchef.BottomNavigationView.ProfileFragment;
+import com.justifiers.foodchef.BottomNavigationView.SearchFragment;
 import com.justifiers.foodchef.R;
 import com.justifiers.foodchef.SettingsActivity;
 
 public class LoginFragment extends Fragment {
 
     // Declare the variables here
-    EditText emailId;
-    EditText passwordLogin;
+    Toolbar lToolbar;
+    TextInputLayout login_email_field;
+    TextInputEditText login_email;
+    TextInputLayout login_password_field;
+    TextInputEditText login_password;
     TextView signUp;
     Button login;
     FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener authStateListener;
 
 
     @Nullable
@@ -39,59 +50,105 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View loginView =  inflater.inflate(R.layout.login_fragment, container, false);
 
-        emailId = loginView.findViewById(R.id.login_email);
-        passwordLogin = loginView.findViewById(R.id.login_password);
-        signUp = loginView.findViewById(R.id.profile_sign_up);
-        login = loginView.findViewById(R.id.profile_login);
+        lToolbar = loginView.findViewById(R.id.lToolbar);
+        lToolbar.setTitle("Profile");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(lToolbar);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        login_email_field = loginView.findViewById(R.id.login_email_layout);
+        login_email = loginView.findViewById(R.id.login_email);
+        login_password_field = loginView.findViewById(R.id.login_password_layout);
+        login_password = loginView.findViewById(R.id.login_password);
+        login = loginView.findViewById(R.id.login_button);
+        signUp = loginView.findViewById(R.id.login_sign_up);
+        login_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (login_password.getText().toString().length() > 0)
+                    login_password_field.setPasswordVisibilityToggleEnabled(true);
+                else {
+                    login_password_field.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseAuth = FirebaseAuth.getInstance();
-                final String email = emailId.getText().toString();
-                String password = passwordLogin.getText().toString();
+                final String email = login_email.getText().toString();
+                String password = login_password.getText().toString();
                 firebaseAuth = FirebaseAuth.getInstance();
                 // check if the email is empty
                 if(email.isEmpty()){
                     // throws error for empty email
-                    emailId.setError("Please enter your email Address");
-                    emailId.requestFocus();
-                } if(password.isEmpty()){
-                    passwordLogin.setError("Please enter your password");
-                    passwordLogin.requestFocus();
-                } else {
-                    if(password.length() < 8){
-                        passwordLogin.setError("Please enter atleast 8 characters for password");
-                        passwordLogin.requestFocus();
-                    }if(!email.isEmpty() && !password.isEmpty() && password.length() > 8) {
-                        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()){
-                                    Toast.makeText(getActivity(),"Login Successful!", Toast.LENGTH_SHORT).show();
-                                    ProfileFragment profileFragment = new ProfileFragment();
-                                    getActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.fragment_container, profileFragment)
-                                            .addToBackStack(null)
-                                            .commit();
-                                }
-                            }
-                        });
+                    login_email.setError("Please enter your email Address");
+                    login_email.requestFocus();
+                } else{
+                    if(!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")){
+                        login_email.setError("Please enter a valid email address only");
+                        login_email.requestFocus();
                     }
+                }
+                if(password.isEmpty()){
+                    login_password_field.setPasswordVisibilityToggleEnabled(false);
+                    login_password.setError("Please enter your password");
+                } else {
+                    if (password.length() < 8) {
+                        login_password_field.setPasswordVisibilityToggleEnabled(false);
+                        login_password.setError("Please enter atleast 8 characters for password");
+                        login_password.requestFocus();
+                    }
+                }
+                if(!email.isEmpty() && !password.isEmpty() && password.length() > 8 && email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+                    firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, new ProfileFragment())
+                                        .commit();
+                            }
+                        }
+                    });
                 }
             }
         });
-
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignUpFragment signupFragment = new SignUpFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, signupFragment)
-                        .addToBackStack(null)
+                        .replace(R.id.fragment_container, new SignUpFragment())
                         .commit();
             }
         });
+
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser() != null){
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new ProfileFragment())
+                            .commit();
+                }
+            }
+        };
         return loginView;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authStateListener);
     }
 }

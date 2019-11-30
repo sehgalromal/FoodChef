@@ -5,36 +5,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?actionBarSize"
+        android:id="@+id/pToolbar"
+        android:background="#F5F5F5" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:id="@+id/toolbar"
-            android:background="#FFFFFF" />
-
-        <com.miguelcatalan.materialsearchview.MaterialSearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_hint" />
-    </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#A79D9D" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginStart="8dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="16dp"
+            android:id="@+id/profile_image"
             android:contentDescription="@string/profile_image"
-            app:srcCompat="@drawable/ic_asset_profile" />
+            app:srcCompat="@drawable/ic_account" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,344 +43,42 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/profile_name"
+                android:textAlignment="center"
                 android:textSize="24sp" />
 
             <Button
                 android:id="@+id/edit_profile_button"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/button_border"
                 android:text="@string/edit_profile_button" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/profile_favourites"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/profile_favourites"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/profile_favourites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="56dp"
-            android:text="@string/profile_favourites"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="8dp"
+        android:background="#A79D9D" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="15dp"
-            android:background="#A79D9D" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp">
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="40dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="12dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/profile_favorites_image"
-                            android:src="@drawable/ic_asset_image_placeholder" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_time_taken"
-                            android:textColor="@color/color_general"
-                            android:textSize="12sp"></TextView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_favourites_food_name"
-                            android:textColor="#000000"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="170dp"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_favorite_filled"></ImageButton>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/profile_like_count"></TextView>
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="50dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_share"></ImageButton>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="40dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="12dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/profile_favorites_image"
-                            android:src="@drawable/ic_asset_image_placeholder" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_time_taken"
-                            android:textColor="@color/color_general"
-                            android:textSize="12sp"></TextView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_favourites_food_name"
-                            android:textColor="#000000"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="170dp"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_favorite_filled"></ImageButton>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/profile_like_count"></TextView>
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="50dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_share"></ImageButton>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="40dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="12dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/profile_favorites_image"
-                            android:src="@drawable/ic_asset_image_placeholder" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_time_taken"
-                            android:textColor="@color/color_general"
-                            android:textSize="12sp"></TextView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_favourites_food_name"
-                            android:textColor="#000000"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="170dp"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_favorite_filled"></ImageButton>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/profile_like_count"></TextView>
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="50dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_share"></ImageButton>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="40dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="12dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/profile_favorites_image"
-                            android:src="@drawable/ic_asset_image_placeholder" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_time_taken"
-                            android:textColor="@color/color_general"
-                            android:textSize="12sp"></TextView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/profile_favourites_food_name"
-                            android:textColor="#000000"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="170dp"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_favorite_filled"></ImageButton>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/profile_like_count"></TextView>
-
-                        <ImageButton
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="50dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_share"></ImageButton>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </GridLayout>
-        </ScrollView>
-    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:id="@+id/favorites_recycler_view"/>
 </LinearLayout>

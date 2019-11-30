@@ -9,10 +9,12 @@
 
     <string name="recipe_popular_today">Popular Today</string>
     <!-- Declaring Login/Sign-up string values here -->
+    <string name="password_rule">Should contain alteast 8 characters</string>
+    <!-- Declaring Login/Sign-up string values here -->
     <string name="profile_email">Email</string>
     <string name="profile_password">Password</string>
-    <string name="password_rule">Should contain alteast 8 characters</string>
-    <string name="prof_login">Login</string>
+    <string name="password_rule_login">Should contain alteast 8 characters</string>
+    <string name="prof_login">LOG IN</string>
     <string name="sign_account">Don\'t Have an Account?</string>
     <string name="prof_sign_up">SIGN UP, IT\'S EASY</string>
     <string name="prof_name">Name</string>
@@ -22,6 +24,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Declaring string values for settings activity here -->
+    <!-- creating an string array to store string values of different languages -->
     <string name="settings_general">General</string>
     <string name="settings_language">LANGUAGE</string>
     <!-- creating an string array to store string values of different languages -->
@@ -38,18 +41,14 @@
         <item>Wi-Fi</item>
         <item>Cellular Data</item>
     </string-array>
-    <string-array name="settings_content_type_values">
-        <item>VIDEO</item>
-        <item>PICTURES</item>
-    </string-array>
+    <string name="settings_video">VIDEO</string>
+    <string name="settings_pictures">PICTURES</string>
     <string-array name="settings_video_quality_values">
         <item>480p</item>
         <item>720p</item>
     </string-array>
-    <string-array name="settings_measurements_values">
-        <item>METRIC</item>
-        <item>IMPERIAL</item>
-    </string-array>
+    <string name="settings_metric">METRIC</string>
+    <string name="settings_imperial">IMPERIAL</string>
     <string name="settings_content">Content</string>
     <string name="settings_content_type">CONTENT TYPE</string>
     <string name="settings_video_quality">VIDEO QUALITY</string>

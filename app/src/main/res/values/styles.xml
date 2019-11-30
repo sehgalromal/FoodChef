@@ -16,6 +16,10 @@
     <style name="EditTextForm" parent="@android:style/Theme.NoTitleBar.Fullscreen">
 
     </style>
+    <style name="FloatingLabelHintText" parent="@android:style/TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/color_general</item>
+    </style>
 
 
 </resources>

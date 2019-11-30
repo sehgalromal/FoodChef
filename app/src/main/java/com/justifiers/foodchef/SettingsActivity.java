@@ -3,20 +3,13 @@ package com.justifiers.foodchef;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.justifiers.foodchef.BottomNavigationView.ProfileFragment;
-import com.justifiers.foodchef.BottomNavigationView.SearchFragment;
 import com.justifiers.foodchef.LoginAndSignUp.LoginFragment;
 
 
@@ -28,7 +21,11 @@ public class SettingsActivity extends AppCompatActivity {
     String[] language_items;
     String[] data_usage_items;
     String[] video_quality_change_items;
-    Toolbar fcTopToolbar;
+    Button content_type_video;
+    Button content_type_pictures;
+    Button measurements_imperial;
+    Button measurements_metric;
+    Toolbar sToolbar;
 
 
     @Override
@@ -36,16 +33,21 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        fcTopToolbar = findViewById(R.id.fcToolbar);
-        fcTopToolbar.setTitle("Settings");
-        fcTopToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        setSupportActionBar(fcTopToolbar);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#865730")));
-        fcTopToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        content_type_video = findViewById(R.id.settings_video);
+        content_type_pictures = findViewById(R.id.settings_pictures);
+        measurements_imperial = findViewById(R.id.settings_imperial);
+        measurements_metric = findViewById(R.id.settings_metric);
+
+        sToolbar = findViewById(R.id.sToolbar);
+        sToolbar.setTitle("Settings");
+        sToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        setSupportActionBar(sToolbar);
+        sToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new LoginFragment())
+                        .commit();
             }
         });
 
@@ -106,7 +108,44 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        content_type_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                content_type_video.setBackgroundColor(Color.parseColor("#CEC5BEBE"));
+                content_type_video.setBackgroundResource(R.drawable.button_semi_1);
+                content_type_pictures.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                content_type_pictures.setBackgroundResource(R.drawable.button_semi_2);
+            }
+        });
 
+        content_type_pictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                content_type_video.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                content_type_video.setBackgroundResource(R.drawable.button_semi_3);
+                content_type_pictures.setBackgroundColor(Color.parseColor("#CEC5BEBE"));
+                content_type_pictures.setBackgroundResource(R.drawable.button_semi_4);
+            }
+        });
 
+        measurements_metric.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                measurements_metric.setBackgroundColor(Color.parseColor("#CEC5BEBE"));
+                measurements_metric.setBackgroundResource(R.drawable.button_semi_1);
+                measurements_imperial.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                measurements_imperial.setBackgroundResource(R.drawable.button_semi_2);
+            }
+        });
+
+        measurements_imperial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                measurements_imperial.setBackgroundColor(Color.parseColor("#CEC5BEBE"));
+                measurements_imperial.setBackgroundResource(R.drawable.button_semi_4);
+                measurements_metric.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                measurements_metric.setBackgroundResource(R.drawable.button_semi_3);
+            }
+        });
     }
 }
