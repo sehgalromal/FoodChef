@@ -1,14 +1,18 @@
 package com.justifiers.foodchef.LoginAndSignUp;
 
+import android.widget.ImageButton;
+
 public class User {
     private String id;
     private String name;
     private String email;
+    private Object favourites;
 
 
-    public User(String name, String email) {
+    public User(String name, String email, Object favourites) {
         this.name = name;
         this.email = email;
+        this.favourites = favourites;
     }
 
     public User() {
@@ -36,5 +40,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Object getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(Object favourites) {
+        this.favourites = favourites;
     }
 }

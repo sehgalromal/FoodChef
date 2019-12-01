@@ -49,6 +49,7 @@ public class SignUpFragment extends Fragment {
     TextView sign_up_login_here;
     FirebaseAuth firebaseAuth;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

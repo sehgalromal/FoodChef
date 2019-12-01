@@ -44,15 +44,16 @@
             android:id="@+id/recycler_popular_recipe_desc"
             android:text="@string/recipe_popular_today_recipe"/>
 
-        <ImageButton
+        <ToggleButton
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="6dp"
             android:layout_marginStart="44dp"
-            android:id="@+id/recipe_favorite"
-            android:background="@null"
-            android:layout_below="@+id/recycler_popular_recipe_desc"
-            android:src="@drawable/ic_favorite_filled"/>
+            android:id="@+id/recipe_favorite_icon"
+            android:background="@drawable/toggle_like_dislike"
+            android:textOff=""
+            android:textOn=""
+            android:layout_below="@+id/recycler_popular_recipe_desc" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +61,7 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="1dp"
             android:id="@+id/recycler_view_recipe_likes"
-            android:layout_below="@+id/recipe_favorite"
+            android:layout_below="@+id/recipe_favorite_icon"
             android:text="@string/recipe_like_count"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

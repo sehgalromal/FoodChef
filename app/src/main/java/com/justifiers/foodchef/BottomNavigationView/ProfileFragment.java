@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,9 +32,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.justifiers.foodchef.EditProfile.EditProfile;
+import com.justifiers.foodchef.LoginAndSignUp.Favourites;
+import com.justifiers.foodchef.LoginAndSignUp.FavouritesAdapter;
 import com.justifiers.foodchef.LoginAndSignUp.LoginFragment;
 import com.justifiers.foodchef.R;
+import com.justifiers.foodchef.Recipe.Recipe;
+import com.justifiers.foodchef.Recipe.RecipeAdapter;
 import com.justifiers.foodchef.SettingsActivity;
+
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
@@ -41,7 +50,12 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+    DatabaseReference ref_user_favourites;
+    ArrayList<Favourites> recipe_list;
     Toolbar sToolbar;
+    RecyclerView recyclerView;
+    FavouritesAdapter favouritesAdapter;
+    RecyclerView.LayoutManager layoutManager;
 
     @Nullable
     @Override
@@ -49,6 +63,7 @@ public class ProfileFragment extends Fragment {
         View profileView = inflater.inflate(R.layout.profile_fragment, container, false);
         setHasOptionsMenu(true);
         sToolbar = profileView.findViewById(R.id.pToolbar);
+        recyclerView = profileView.findViewById(R.id.profile_favorites_recycler_view);
         sToolbar.setTitle("Profile");
         ((AppCompatActivity) getActivity()).setSupportActionBar(sToolbar);
         profile_name = profileView.findViewById(R.id.profile_name);
@@ -73,9 +88,31 @@ public class ProfileFragment extends Fragment {
             databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String name = dataSnapshot.child("name").getValue().toString();
-                    profile_name.setText(name);
+                    if(dataSnapshot.child("name").getValue() != null) {
+                        String name = dataSnapshot.child("name").getValue().toString();
+                        profile_name.setText(name);
+                    }
                 }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            ref_user_favourites = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites");
+            ref_user_favourites.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    recipe_list = new ArrayList<>();
+                    for (DataSnapshot ds : dataSnapshot.getChildren())
+                        recipe_list.add(ds.getValue(Favourites.class));
+
+                    layoutManager = new GridLayoutManager(getActivity(), 2);
+                    recyclerView.setLayoutManager(layoutManager);
+                    favouritesAdapter = new FavouritesAdapter(recipe_list);
+                    recyclerView.setAdapter(favouritesAdapter);
+                }
+
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {

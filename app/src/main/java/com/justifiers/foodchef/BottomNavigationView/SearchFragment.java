@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,8 +27,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +47,9 @@ import com.wanderingcan.persistentsearch.PersistentSearchView;
 import com.wanderingcan.persistentsearch.SearchMenuItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -49,6 +58,9 @@ public class SearchFragment extends Fragment {
 
     // Declare Variables here
     DatabaseReference ref;
+    DatabaseReference ref_user_favourites;
+    DatabaseReference ref_user_favourites_unlike;
+    TextView recipe_dinner;
     ArrayList<Recipe> recipeList;
     ArrayList<Recipe> recipeList_dinner;
     RecyclerView recyclerView;
@@ -59,6 +71,7 @@ public class SearchFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager_dinner;
     PersistentSearchView persistentSearchView;
     SwipeRefreshLayout pullToRefresh;
+    FirebaseAuth mAuth;
     ChipGroup chip_selection;
     FrameLayout frameLayout;
     private boolean micEnabled;
@@ -70,8 +83,10 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View searchView =  inflater.inflate(R.layout.search_fragment, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
         ref = FirebaseDatabase.getInstance().getReference().child("Recipe");
         System.out.println(ref);
+        recipe_dinner = searchView.findViewById(R.id.recipe_dinner);
         recyclerView = searchView.findViewById(R.id.recycler_view);
         recyclerView_dinner = searchView.findViewById(R.id.recycler_view_dinner);
         persistentSearchView = searchView.findViewById(R.id.search_bar);
@@ -97,6 +112,8 @@ public class SearchFragment extends Fragment {
                     recyclerView.setLayoutManager(layoutManager);
                     RecipeAdapter adapter = new RecipeAdapter(rlist, getActivity());
                     recyclerView.setAdapter(adapter);
+                    recyclerView_dinner.setAlpha(0);
+                    recipe_dinner.setAlpha(0);
                 }
             }
         });
@@ -180,7 +197,35 @@ public class SearchFragment extends Fragment {
                     recipeAdapter = new RecipeAdapter(recipeList, getActivity());
                     Log.e("WDWD", "FIRST_ADAPTER");
                     recyclerView.setAdapter(recipeAdapter);
+                    recipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
 
+                        }
+
+                        @Override
+                        public void onLikeClick(final int position) {
+                            Map<String,Object> favorites_recipe = new HashMap<>();
+                            favorites_recipe.put("rName", recipeList.get(position).getrName());
+                            favorites_recipe.put("rImage",recipeList.get(position).getrImage());
+                            favorites_recipe.put("rTime", recipeList.get(position).getrTime());
+                            favorites_recipe.put("rLikes", recipeList.get(position).getLikes());
+                            if(mAuth.getCurrentUser().getUid() != null){
+                                final String userId = mAuth.getCurrentUser().getUid();
+                                ref_user_favourites = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites").child(recipeList.get(position).getrName());
+                                ref_user_favourites.updateChildren(favorites_recipe);
+                            }
+                        }
+
+                        @Override
+                        public void onUnLikeClick(int position) {
+                            String userId = mAuth.getCurrentUser().getUid();
+                            if(mAuth.getCurrentUser().getUid() != null) {
+                                ref_user_favourites_unlike = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites").child(recipeList.get(position).getrName());
+                                ref_user_favourites_unlike.removeValue();
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -215,6 +260,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onRefresh() {
                 onStart();
+                chip_selection.clearCheck();
                 persistentSearchView.clearFocus();
                 persistentSearchView.openSearch();
                 persistentSearchView.setNavigationDrawable(getResources().getDrawable(R.drawable.ic_search));

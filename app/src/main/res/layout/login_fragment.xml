@@ -66,6 +66,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            android:id="@+id/login_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/prof_sign_up"
+            android:layout_gravity="center"
+            android:textColor="#B38867"
+            android:textSize="20sp"/>
+
+        <TextView
             android:id="@+id/password_length_rule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,14 +110,5 @@
             android:textSize="20sp"
             android:text="@string/sign_account" />
 
-        <TextView
-            android:id="@+id/login_sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/prof_sign_up"
-            android:layout_gravity="center"
-            android:textColor="#B38867"
-            android:textSize="20sp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

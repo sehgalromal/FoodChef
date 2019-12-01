@@ -1,20 +1,23 @@
 package com.justifiers.foodchef.Recipe;
 
-public class Recipe {
+
+public class Recipe  {
     private Object ingredients;
     private String likes;
     private String rImage;
     private String rName;
     private String rTime;
     private String rType;
+    private String rVideo;
 
-    public Recipe(Object ingredients, String likes, String rImage, String rName, String rTime, String rType) {
+    public Recipe(Object ingredients, String likes, String rImage, String rName, String rTime, String rType, String rVideo) {
         this.ingredients = ingredients;
         this.likes = likes;
         this.rImage = rImage;
         this.rName = rName;
         this.rTime = rTime;
         this.rType = rType;
+        this.rVideo = rVideo;
     }
 
     public Recipe() {
@@ -65,7 +68,15 @@ public class Recipe {
         return rType;
     }
 
-    public void setRType(String RType) {
-        this.rType = RType;
+    public void setRType(String rType) {
+        this.rType = rType;
+    }
+
+    public String getrVideo() {
+        return rVideo;
+    }
+
+    public void setrVideo(String rVideo) {
+        this.rVideo = rVideo;
     }
 }
