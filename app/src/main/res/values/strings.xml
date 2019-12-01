@@ -115,4 +115,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="search_title">search_area</string>
+    <string name="next_btn_title_instruct">Next Step</string>
 </resources>
