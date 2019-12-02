@@ -1,13 +1,19 @@
 package com.justifiers.foodchef.Instructions;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 public class InstructionItem implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     String rDescription;
     String videoUrl;
 
-    public InstructionItem() {}
+    public InstructionItem() {
+    }
 
     public InstructionItem(String rDescription, String videoUrl) {
         this.rDescription = rDescription;

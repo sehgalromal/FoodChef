@@ -1,9 +1,6 @@
 package com.justifiers.foodchef;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -20,8 +17,11 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.justifiers.foodchef.BottomNavigationView.SearchFragment;
 import com.justifiers.foodchef.Instructions.InstructionsActivity;
 import com.justifiers.foodchef.Recipe.Recipe;
+
+import java.io.Serializable;
 
 public class RecipeView extends AppCompatActivity {
 
@@ -154,6 +154,8 @@ public class RecipeView extends AppCompatActivity {
                 serving.setText(value);
             }
         });
+
+        setupPreparationButton();
     }
 
     protected void setupVideo() {
@@ -189,7 +191,7 @@ public class RecipeView extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(RecipeView.this, InstructionsActivity.class);
-                // intent.putExtra(RecipeView.STEP_INSTRUCTIONS, );
+                intent.putExtra(RecipeView.STEP_INSTRUCTIONS, (Serializable) recipe.getrInstructionSteps());
                 RecipeView.this.startActivity(intent);
             }
         });
