@@ -3,6 +3,7 @@ package com.justifiers.foodchef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -26,11 +27,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Tag;
+import com.justifiers.foodchef.Instructions.InstructionsActivity;
 
 import android.view.SurfaceHolder;
 
 public class RecipeView extends AppCompatActivity {
 
+    private static final String STEP_INSTRUCTIONS = "Step instructions";
+
+    private Button btnBeginPreparation;
     private TextView recipe_name;
     private Button download;
     private Button favorite;
@@ -254,6 +259,20 @@ public class RecipeView extends AppCompatActivity {
             }
         });
 
+    }
+
+    protected void setupPreparationButton() {
+
+        btnBeginPreparation = findViewById(R.id.startPreparation);
+        btnBeginPreparation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(RecipeView.this, InstructionsActivity.class);
+                // intent.putExtra(RecipeView.STEP_INSTRUCTIONS, );
+                RecipeView.this.startActivity(intent);
+            }
+        });
     }
 
 }
