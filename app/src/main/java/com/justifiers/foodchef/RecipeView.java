@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -48,6 +49,7 @@ public class RecipeView extends AppCompatActivity {
     private VideoView videoView;
     private MediaController mediaController;
 
+
     String url = "https://foodchef-d5481.firebaseio.com/";
     String videoURL;
     Recipe recipe;
@@ -79,8 +81,6 @@ public class RecipeView extends AppCompatActivity {
         TextView duration = findViewById(R.id.durationValue);
         duration.setText(recipe.getrTime());
 
-        TextView likes = findViewById(R.id.favCountText);
-        likes.setText(recipe.getLikes());
 
         TextView description = findViewById(R.id.textDescription);
         description.setText(recipe.getrDescription());
@@ -105,32 +105,6 @@ public class RecipeView extends AppCompatActivity {
                 downloadTask download = new downloadTask(getApplicationContext(), url);
 
                 int downloadRequest = download.download();
-            }
-        });
-
-        favorite = findViewById(R.id.favoriteButton);
-        favoriteText = findViewById(R.id.favCountText);
-
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isFav == false) {
-                    int count = Integer.parseInt(favoriteText.getText().toString());
-                    count = count + 1;
-                    String value = String.valueOf(count);
-                    favoriteText.setText(value);
-                    favorite.setBackgroundResource(R.drawable.ic_favorite_filled);
-                    isFav = true;
-                    // likeCount.setValue(value);
-                } else {
-                    int count = Integer.parseInt(favoriteText.getText().toString());
-                    count = count - 1;
-                    String value = String.valueOf(count);
-                    favoriteText.setText(value);
-                    favorite.setBackgroundResource(R.drawable.ic_favorite_unfilled);
-                    isFav = false;
-                    // likeCount.setValue(value);
-                }
             }
         });
 
@@ -160,6 +134,7 @@ public class RecipeView extends AppCompatActivity {
                 serving.setText(value);
             }
         });
+
     }
 
     protected void setupVideo() {
