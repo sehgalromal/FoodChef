@@ -1,18 +1,16 @@
 package com.justifiers.foodchef.BottomNavigationView;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,25 +19,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import android.content.pm.PackageManager;
 import com.justifiers.foodchef.R;
 import com.justifiers.foodchef.Recipe.Recipe;
 import com.justifiers.foodchef.Recipe.RecipeAdapter;
@@ -74,6 +66,7 @@ public class SearchFragment extends Fragment {
     FirebaseAuth mAuth;
     ChipGroup chip_selection;
     FrameLayout frameLayout;
+    String language;
     private boolean micEnabled;
     private static final int VOICE_RECOGNITION_CODE = 9999;
 
@@ -82,7 +75,8 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View searchView =  inflater.inflate(R.layout.search_fragment, container, false);
-
+        SharedPreferences preferences = getActivity().getSharedPreferences("SettingsActivity", Activity.MODE_PRIVATE);
+        language = preferences.getString("Language", "");
         mAuth = FirebaseAuth.getInstance();
         ref = FirebaseDatabase.getInstance().getReference().child("Recipe");
         System.out.println(ref);
@@ -101,19 +95,26 @@ public class SearchFragment extends Fragment {
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 Chip chip = group.findViewById(checkedId);
                 if (chip != null) {
-                    //Toast.makeText(MainActivity.this, "Selected Chip is: " + chip.getText(), Toast.LENGTH_SHORT).show();
                     ArrayList<Recipe> rlist = new ArrayList<>();
                     for (Recipe object : recipeList) {
                         if (object.getRType().contains((chip.getText().toString()))) {
+                            rlist.add(object);
+                        } else if(object.getrTypeHi().contains((chip.getText().toString()))){
+                            rlist.add(object);
+                        } else if(object.getrTypeFr().contains((chip.getText().toString()))){
+                            rlist.add(object);
+                        } else if(object.getrTypeUk().contains((chip.getText().toString()))){
                             rlist.add(object);
                         }
                     }
                     layoutManager = new GridLayoutManager(getActivity(), 2);
                     recyclerView.setLayoutManager(layoutManager);
-                    RecipeAdapter adapter = new RecipeAdapter(rlist, getActivity());
-                    recyclerView.setAdapter(adapter);
-                    recyclerView_dinner.setAlpha(0);
-                    recipe_dinner.setAlpha(0);
+                    if(getActivity() != null) {
+                        RecipeAdapter adapter = new RecipeAdapter(rlist, getActivity());
+                        recyclerView.setAdapter(adapter);
+                        recyclerView_dinner.setAlpha(0);
+                        recipe_dinner.setAlpha(0);
+                    }
                 }
             }
         });
@@ -191,6 +192,7 @@ public class SearchFragment extends Fragment {
                         recipeList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren())
                             recipeList.add(ds.getValue(Recipe.class));
+
                     }
                     layoutManager = new GridLayoutManager(getActivity(), 2);
                     recyclerView.setLayoutManager(layoutManager);
@@ -205,25 +207,38 @@ public class SearchFragment extends Fragment {
 
                         @Override
                         public void onLikeClick(final int position) {
-                            Map<String,Object> favorites_recipe = new HashMap<>();
-                            favorites_recipe.put("rName", recipeList.get(position).getrName());
-                            favorites_recipe.put("rImage",recipeList.get(position).getrImage());
+                            Map<String, Object> favorites_recipe = new HashMap<>();
+                            if (language.equals("en")) {
+                                favorites_recipe.put("rName", recipeList.get(position).getrName());
+                            } else if (language.equals("fr")) {
+                                favorites_recipe.put("rName", recipeList.get(position).getrNameFr());
+                            } else if (language.equals("hi")) {
+                                favorites_recipe.put("rName", recipeList.get(position).getrNameHi());
+                            } else if (language.equals("uk")) {
+                                favorites_recipe.put("rName", recipeList.get(position).getrNameUk());
+                            }
+                            favorites_recipe.put("rImage", recipeList.get(position).getrImage());
                             favorites_recipe.put("rTime", recipeList.get(position).getrTime());
                             favorites_recipe.put("rLikes", recipeList.get(position).getLikes());
-                            if(mAuth.getCurrentUser().getUid() != null){
+
+                            try {
                                 final String userId = mAuth.getCurrentUser().getUid();
                                 ref_user_favourites = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites").child(recipeList.get(position).getrName());
                                 ref_user_favourites.updateChildren(favorites_recipe);
+                            } catch (NullPointerException e){
+                                Toast.makeText(getActivity(), "Login or SignUp is required to add the recipe to favourites", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onUnLikeClick(int position) {
-                            String userId = mAuth.getCurrentUser().getUid();
-                            if(mAuth.getCurrentUser().getUid() != null) {
-                                ref_user_favourites_unlike = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites").child(recipeList.get(position).getrName());
-                                ref_user_favourites_unlike.removeValue();
-                            }
+//                            if (mAuth.getCurrentUser().getUid() != null) {
+//                                String userId = mAuth.getCurrentUser().getUid();
+//                                ref_user_favourites_unlike = FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("favourites").child(recipeList.get(position).getrName());
+//                                ref_user_favourites_unlike.removeValue();
+//                            } else {
+//                                Toast.makeText(getActivity(), "Login/SignUp is required", Toast.LENGTH_SHORT).show();
+//                            }
                         }
                     });
                 }
@@ -244,7 +259,9 @@ public class SearchFragment extends Fragment {
                         }
                         layoutManager_dinner = new GridLayoutManager(getActivity(), 2);
                         recyclerView_dinner.setLayoutManager(layoutManager_dinner);
-                        recipeAdapter_dinner = new RecipeAdapter(recipeList_dinner, getActivity());
+                        if(getActivity() != null) {
+                            recipeAdapter_dinner = new RecipeAdapter(recipeList_dinner, getActivity());
+                        }
                         recyclerView_dinner.setAdapter(recipeAdapter_dinner);
                     }
                 }
@@ -287,19 +304,21 @@ public class SearchFragment extends Fragment {
             }
         }
         layoutManager = new GridLayoutManager(getActivity(), 2);
-        RecipeAdapter adapter = new RecipeAdapter(rlist, getActivity());
-        Log.e("WDWDWA", "SECOND_ADAPTER");
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        Toast.makeText(getActivity(), "Recipes Fetched Successfully!", Toast.LENGTH_LONG).show();
-        persistentSearchView.setNavigationDrawable(getResources().getDrawable(R.drawable.ic_search));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Toast toast = Toast.makeText(getActivity(), "Pull Down to load all Recipies back", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        }, 4000);
+        if(getActivity() != null){
+            RecipeAdapter adapter = new RecipeAdapter(rlist, getActivity());
+            Log.e("WDWDWA", "SECOND_ADAPTER");
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+            Toast.makeText(getActivity(), "Recipes Fetched Successfully!", Toast.LENGTH_LONG).show();
+            persistentSearchView.setNavigationDrawable(getResources().getDrawable(R.drawable.ic_search));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(getActivity(), "Pull Down to load all Recipies back", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }, 4000);
+        }
     }
 
     @Override
@@ -307,16 +326,20 @@ public class SearchFragment extends Fragment {
         if (requestCode == VOICE_RECOGNITION_CODE && resultCode == RESULT_OK) {
             ArrayList<String> matches = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            persistentSearchView.populateSearchText(matches.get(0));
+            if(matches.get(0) != null) {
+                persistentSearchView.populateSearchText(matches.get(0));
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean isIntentAvailable(Intent intent) {
-        PackageManager mgr = getContext().getPackageManager();
-        if (mgr != null) {
-            List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-            return list.size() > 0;
+        if(getContext().getPackageManager() != null) {
+            PackageManager mgr = getContext().getPackageManager();
+            if (mgr != null) {
+                List<ResolveInfo> list = mgr.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                return list.size() > 0;
+            }
         }
         return false;
     }

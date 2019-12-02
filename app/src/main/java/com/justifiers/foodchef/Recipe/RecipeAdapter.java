@@ -1,10 +1,16 @@
 package com.justifiers.foodchef.Recipe;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +32,9 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.recipeHolder> {
 
@@ -33,10 +42,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.recipeHold
     private Context ctx;
     OutputStream outputStream;
     private OnItemClickListener rlistener;
+    String language;
 
     public RecipeAdapter(ArrayList<Recipe> recipeList, Context ctx) {
         this.recipeList = recipeList;
         this.ctx = ctx;
+        SharedPreferences preferences = ctx.getSharedPreferences("SettingsActivity", Activity.MODE_PRIVATE);
+        language = preferences.getString("Language", "");
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -59,7 +71,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.recipeHold
     @Override
     public void onBindViewHolder(final recipeHolder holder, final int position) {
         Picasso.get().load(recipeList.get(position).getrImage()).into(holder.recipeImage);
-        holder.recipeName.setText(recipeList.get(position).getrName());
+        if(language.equals("en")){
+            holder.recipeName.setText(recipeList.get(position).getrName());
+        } else if(language.equals("fr")){
+            holder.recipeName.setText(recipeList.get(position).getrNameFr());
+        } else if(language.equals("uk")){
+            holder.recipeName.setText(recipeList.get(position).getrNameUk());
+        } else if(language.equals("hi")){
+            holder.recipeName.setText(recipeList.get(position).getrNameHi());
+        }
         holder.recipeTime.setText(recipeList.get(position).getrTime());
         holder.recipe_likes.setText(recipeList.get(position).getLikes());
         recipeList.get(position).getrTime();
@@ -128,24 +148,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.recipeHold
                     }
                 }
             });
-            recipe_favourite_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(recipe_favourite_button.getBackground() == ctx.getResources().getDrawable(R.drawable.ic_favorite_unfilled)){
-                        recipe_favourite_button.setBackgroundResource(R.drawable.ic_favorite_filled);
-                    } else {
-                        recipe_favourite_button.setBackgroundResource(R.drawable.ic_favorite_unfilled);
-                    }
-                    if(listener != null){
-                        int position = getAdapterPosition();
-                        if(position != RecyclerView.NO_POSITION){
-                            recipe_favourite_button.setBackgroundResource(R.drawable.ic_favorite_filled);
-                            listener.onLikeClick(position);
-                        }
-                    }
-                }
-            });
-
             recipe_favourite_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -153,16 +155,34 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.recipeHold
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION){
                             if(!recipe_favourite_button.isChecked()){
-                                recipe_favourite_button.setBackgroundResource(R.drawable.ic_favorite_filled);
                                 listener.onLikeClick(position);
-                            }  {
-                                recipe_favourite_button.setBackgroundResource(R.drawable.ic_favorite_unfilled);
-                                listener.onUnLikeClick(position);
                             }
                         }
                     }
                 }
             });
         }
+    }
+
+    private void setLocale(String language){
+        Resources resources = ctx.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT>= 21){
+            config.setLocale(new Locale(language));
+        } else {
+            config.locale = new Locale(language);
+        }
+        resources.updateConfiguration(config, dm);
+        // save the settings
+        SharedPreferences.Editor lang_editor = ctx.getSharedPreferences("SettingsActivity", MODE_PRIVATE).edit();
+        lang_editor.putString("Language", language);
+        lang_editor.apply();
+    }
+
+    public void loadLocale(){
+        SharedPreferences preferences = ctx.getSharedPreferences("SettingsActivity", MODE_PRIVATE);
+        String language = preferences.getString("Language", "");
+        setLocale(language);
     }
 }

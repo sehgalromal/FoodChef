@@ -3,7 +3,15 @@ package com.justifiers.foodchef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +21,8 @@ import com.justifiers.foodchef.BottomNavigationView.SearchFragment;
 import com.justifiers.foodchef.BottomNavigationView.ShoppingListFragment;
 import com.justifiers.foodchef.LoginAndSignUp.LoginFragment;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     // Declare Variables here
@@ -21,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = getSharedPreferences("SettingsActivity", Activity.MODE_PRIVATE);
+        String language = preferences.getString("Language", "");
+        setLocale(language);
         setContentView(R.layout.activity_main);
 
         // initializing the variables
@@ -69,4 +82,25 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void setLocale(String language){
+        Resources resources = getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT>= 21){
+            config.setLocale(new Locale(language));
+        } else {
+            config.locale = new Locale(language);
+        }
+        resources.updateConfiguration(config, dm);
+        // save the settings
+        SharedPreferences.Editor lang_editor = getSharedPreferences("SettingsActivity", MODE_PRIVATE).edit();
+        lang_editor.putString("Language", language);
+        lang_editor.apply();
+    }
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 }
