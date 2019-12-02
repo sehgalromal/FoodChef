@@ -49,6 +49,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SearchFragment extends Fragment {
 
+    private static final String RECIPE = "RecipeInformation";
     private static final String TAG = "SearchFragment";
 
     // Declare Variables here
@@ -104,13 +105,13 @@ public class SearchFragment extends Fragment {
                 if (chip != null) {
                     ArrayList<Recipe> rlist = new ArrayList<>();
                     for (Recipe object : recipeList) {
-                        if (object.getRType().contains((chip.getText().toString()))) {
+                        if (object.getrType().contains((chip.getText().toString()))) {
                             rlist.add(object);
                         } else if(object.getrTypeHi().contains((chip.getText().toString()))){
                             rlist.add(object);
                         } else if(object.getrTypeFr().contains((chip.getText().toString()))){
                             rlist.add(object);
-                        } else if(object.getrTypeUk().contains((chip.getText().toString()))){
+                        } else if(object.getrTypeUa().contains((chip.getText().toString()))){
                             rlist.add(object);
                         }
                     }
@@ -219,10 +220,10 @@ public class SearchFragment extends Fragment {
                     recipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            String ID = String.valueOf(position);
+                            Recipe recipe = recipeList.get(position);
                             Intent intent = new Intent(getContext(), RecipeView.class);
+                            intent.putExtra(SearchFragment.RECIPE, recipe);
                             getContext().startActivity(intent);
-                            intent.putExtra("recipeID",ID);
                         }
 
                         @Override
