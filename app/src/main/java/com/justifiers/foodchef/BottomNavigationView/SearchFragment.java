@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.justifiers.foodchef.R;
 import com.justifiers.foodchef.Recipe.Recipe;
 import com.justifiers.foodchef.Recipe.RecipeAdapter;
+import com.justifiers.foodchef.RecipeView;
 import com.wanderingcan.persistentsearch.PersistentSearchView;
 import com.wanderingcan.persistentsearch.SearchMenuItem;
 
@@ -218,8 +219,10 @@ public class SearchFragment extends Fragment {
                     recipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            Log.d(TAG, "onItemClick: pressed");
-                            System.out.println(recipeList.get(position));
+                            String ID = String.valueOf(position);
+                            Intent intent = new Intent(getContext(), RecipeView.class);
+                            getContext().startActivity(intent);
+                            intent.putExtra("recipeID",ID);
                         }
 
                         @Override

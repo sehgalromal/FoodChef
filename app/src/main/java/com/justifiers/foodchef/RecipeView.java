@@ -1,6 +1,7 @@
 package com.justifiers.foodchef;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Tag;
 
 import android.view.SurfaceHolder;
 
@@ -37,25 +39,40 @@ public class RecipeView extends AppCompatActivity {
     private Button add;
     private TextView serving;
     boolean isFav = false;
+    private Button goBack;
     private VideoView videoView;
     private MediaController mediaController;
 
     String url = "https://foodchef-d5481.firebaseio.com/";
     String videoURL;
+    String recipeID;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance(url);
-    private DatabaseReference recipeName = database.getReferenceFromUrl(url + "Recipe/1/rName");
-    private DatabaseReference recipeURL = database.getReferenceFromUrl(url + "Recipe/1/rVideo");
-    private DatabaseReference recipeDuration = database.getReferenceFromUrl(url + "Recipe/1/rTime");
-    private DatabaseReference likeCount = database.getReferenceFromUrl(url + "Recipe/1/likes");
-    private DatabaseReference recipeDescription = database.getReferenceFromUrl(url + "Recipe/1/Description");
-    private DatabaseReference recipeUtensils = database.getReferenceFromUrl(url + "Recipe/1/Utensils");
+    private DatabaseReference recipeName;
+    private DatabaseReference recipeURL;
+    private DatabaseReference recipeDuration;
+    private DatabaseReference likeCount;
+    private DatabaseReference recipeDescription;
+    private DatabaseReference recipeUtensils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
-        //Intent intent =getIntent();
+        Intent intent =getIntent();
+        recipeID = intent.getStringExtra("recipeID");
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        recipeName = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/rName");
+        recipeURL = database.getReferenceFromUrl(url+"Recipe/1/rVideo");
+        recipeDuration = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/rTime");
+        likeCount = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/likes");
+        recipeDescription = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/Description");
+        recipeUtensils = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/Utensils");
 
         recipe_name = findViewById(R.id.recipe_name);
 
@@ -76,7 +93,8 @@ public class RecipeView extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 videoURL = dataSnapshot.getValue(String.class);
-                Uri uri = Uri.parse(videoURL);
+                Uri uri;
+                uri = Uri.parse(videoURL);
 
                 videoView = findViewById(R.id.video_view);
                 mediaController = new MediaController(RecipeView.this);
@@ -165,11 +183,20 @@ public class RecipeView extends AppCompatActivity {
             }
         });
 
+        goBack = findViewById(R.id.buttonBack);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         download = findViewById(R.id.buttonDownload);
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadTask download = new downloadTask(getApplicationContext(), url);
+                Toast.makeText(getApplicationContext(),"Button Pressed",Toast.LENGTH_SHORT);
+                downloadTask download = new downloadTask(getApplicationContext(),url);
                 int downloadRequest = download.download();
             }
         });
@@ -226,6 +253,7 @@ public class RecipeView extends AppCompatActivity {
                 serving.setText(value);
             }
         });
+
     }
 
 }
