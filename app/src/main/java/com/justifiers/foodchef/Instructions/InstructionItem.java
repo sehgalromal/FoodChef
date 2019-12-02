@@ -1,26 +1,40 @@
 package com.justifiers.foodchef.Instructions;
 
-public class InstructionItem {
+import java.io.Serializable;
 
-    String description;
-    String imageURL;
-    int order;
+public class InstructionItem implements Serializable {
 
-    public InstructionItem(String description, String imageURL, int order) {
-        this.description = description;
-        this.imageURL = imageURL;
-        this.order = order;
+    String rDescription;
+    String videoUrl;
+
+    public InstructionItem() {}
+
+    public InstructionItem(String rDescription, String videoUrl) {
+        this.rDescription = rDescription;
+        this.videoUrl = videoUrl;
     }
 
-    public String getDescription() {
-        return description;
+    public String getrDescription() {
+        return rDescription;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public void setrDescription(String rDescription) {
+        this.rDescription = rDescription;
     }
 
-    public int getOrder() {
-        return order;
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "InstructionItem{" +
+                "rDescription='" + rDescription + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                '}';
     }
 }

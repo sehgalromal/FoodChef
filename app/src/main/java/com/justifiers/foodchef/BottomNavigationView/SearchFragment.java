@@ -49,6 +49,9 @@ import static android.app.Activity.RESULT_OK;
 
 public class SearchFragment extends Fragment {
 
+    private static final String RECIPE = "RecipeInformation";
+    private static final String TAG = "SearchFragment";
+
     // Declare Variables here
     DatabaseReference ref;
     DatabaseReference ref_user_favourites;
@@ -77,10 +80,14 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View searchView =  inflater.inflate(R.layout.search_fragment, container, false);
         SharedPreferences preferences = getActivity().getSharedPreferences("SettingsActivity", Activity.MODE_PRIVATE);
+
         language = preferences.getString("Language", "");
         mAuth = FirebaseAuth.getInstance();
+
         ref = FirebaseDatabase.getInstance().getReference().child("Recipe");
+
         System.out.println(ref);
+
         recipe_dinner = searchView.findViewById(R.id.recipe_dinner);
         recyclerView = searchView.findViewById(R.id.recycler_view);
         recyclerView_dinner = searchView.findViewById(R.id.recycler_view_dinner);
@@ -98,13 +105,13 @@ public class SearchFragment extends Fragment {
                 if (chip != null) {
                     ArrayList<Recipe> rlist = new ArrayList<>();
                     for (Recipe object : recipeList) {
-                        if (object.getRType().contains((chip.getText().toString()))) {
+                        if (object.getrType().contains((chip.getText().toString()))) {
                             rlist.add(object);
                         } else if(object.getrTypeHi().contains((chip.getText().toString()))){
                             rlist.add(object);
                         } else if(object.getrTypeFr().contains((chip.getText().toString()))){
                             rlist.add(object);
-                        } else if(object.getrTypeUk().contains((chip.getText().toString()))){
+                        } else if(object.getrTypeUa().contains((chip.getText().toString()))){
                             rlist.add(object);
                         }
                     }
@@ -185,28 +192,38 @@ public class SearchFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: start");
+
         if (ref != null) {
+            Log.d(TAG, "onStart: ref is not null");
+
             ref.addValueEventListener(new ValueEventListener() {
+
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    Log.d(TAG, "onDataChange: starts");
+
                     if (dataSnapshot.exists()) {
                         recipeList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren())
                             recipeList.add(ds.getValue(Recipe.class));
 
                     }
+
                     layoutManager = new GridLayoutManager(getActivity(), 2);
                     recyclerView.setLayoutManager(layoutManager);
+
                     recipeAdapter = new RecipeAdapter(recipeList, getActivity());
                     Log.e("WDWD", "FIRST_ADAPTER");
                     recyclerView.setAdapter(recipeAdapter);
                     recipeAdapter.setOnItemClickListener(new RecipeAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            String ID = String.valueOf(position);
+                            Recipe recipe = recipeList.get(position);
                             Intent intent = new Intent(getContext(), RecipeView.class);
+                            intent.putExtra(SearchFragment.RECIPE, recipe);
                             getContext().startActivity(intent);
-                            intent.putExtra("recipeID",position);
                         }
 
                         @Override

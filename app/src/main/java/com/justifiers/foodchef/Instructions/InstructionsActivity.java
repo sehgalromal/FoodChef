@@ -114,9 +114,9 @@ public class InstructionsActivity extends AppCompatActivity {
         String descThree = "Once the parsnips are tender, drain them and season with salt. Add butter, milk and nutmeg to the pot, mix to combine, then purée with a hand mixer.";
 
         steps = new ArrayList<>();
-        steps.add(new InstructionItem(descOne, imageOne, 0));
-        steps.add(new InstructionItem(descTwo, imageTwo, 1));
-        steps.add(new InstructionItem(descThree, imageThree, 2));
+        steps.add(new InstructionItem(descOne, imageOne));
+        steps.add(new InstructionItem(descTwo, imageTwo));
+        steps.add(new InstructionItem(descThree, imageThree));
 
         stepPager = findViewById(R.id.steps_view_pager);
         instructionsViewPagerAdapter = new InstructionsViewPagerAdapter(this, steps);
