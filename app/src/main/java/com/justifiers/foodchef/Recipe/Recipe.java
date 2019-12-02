@@ -1,7 +1,12 @@
 package com.justifiers.foodchef.Recipe;
 
 
-public class Recipe  {
+import com.justifiers.foodchef.Instructions.InstructionItem;
+
+import java.util.List;
+
+public class Recipe {
+
     private Object ingredients;
     private String likes;
     private String rImage;
@@ -15,22 +20,23 @@ public class Recipe  {
     private String rTypeUk;
     private String rTypeHi;
     private String rVideo;
+    private List<InstructionItem> rInstructionSteps;
 
-    public Recipe(Object ingredients, String likes, String rImage, String rName, String rTime, String rType, String rVideo, String rNameFr
-    , String rNameHi, String rNameUk, String rTypeHi, String rTypeFr, String rTypeUk) {
+    public Recipe(Object ingredients, String likes, String rImage, String rName, String rNameFr, String rNameUk, String rNameHi, String rTime, String rType, String rTypeFr, String rTypeUk, String rTypeHi, String rVideo, List<InstructionItem> rInstructionSteps) {
         this.ingredients = ingredients;
         this.likes = likes;
         this.rImage = rImage;
         this.rName = rName;
+        this.rNameFr = rNameFr;
+        this.rNameUk = rNameUk;
+        this.rNameHi = rNameHi;
         this.rTime = rTime;
         this.rType = rType;
-        this.rVideo = rVideo;
-        this.rNameFr = rNameFr;
-        this.rNameHi = rNameHi;
-        this.rNameUk = rNameUk;
-        this.rTypeHi = rTypeHi;
         this.rTypeFr = rTypeFr;
         this.rTypeUk = rTypeUk;
+        this.rTypeHi = rTypeHi;
+        this.rVideo = rVideo;
+        this.rInstructionSteps = rInstructionSteps;
     }
 
     public Recipe() {
@@ -138,5 +144,33 @@ public class Recipe  {
 
     public void setrVideo(String rVideo) {
         this.rVideo = rVideo;
+    }
+
+    public List<InstructionItem> getrInstructionSteps() {
+        return rInstructionSteps;
+    }
+
+    public void setrInstructionSteps(List<InstructionItem> rInstructionSteps) {
+        this.rInstructionSteps = rInstructionSteps;
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "ingredients=" + ingredients +
+                ", likes='" + likes + '\'' +
+                ", rImage='" + rImage + '\'' +
+                ", rName='" + rName + '\'' +
+                ", rNameFr='" + rNameFr + '\'' +
+                ", rNameUk='" + rNameUk + '\'' +
+                ", rNameHi='" + rNameHi + '\'' +
+                ", rTime='" + rTime + '\'' +
+                ", rType='" + rType + '\'' +
+                ", rTypeFr='" + rTypeFr + '\'' +
+                ", rTypeUk='" + rTypeUk + '\'' +
+                ", rTypeHi='" + rTypeHi + '\'' +
+                ", rVideo='" + rVideo + '\'' +
+                ", rInstructionSteps=" + rInstructionSteps +
+                '}';
     }
 }

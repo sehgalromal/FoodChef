@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import android.view.SurfaceHolder;
 
 public class RecipeView extends AppCompatActivity {
@@ -43,12 +44,12 @@ public class RecipeView extends AppCompatActivity {
     String videoURL;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance(url);
-    private DatabaseReference recipeName = database.getReferenceFromUrl(url+"Recipe/1/rName");
-    private DatabaseReference recipeURL = database.getReferenceFromUrl(url+"Recipe/1/rVideo");
-    private DatabaseReference recipeDuration = database.getReferenceFromUrl(url+"Recipe/1/rTime");
-    private DatabaseReference likeCount = database.getReferenceFromUrl(url+"Recipe/1/likes");
-    private DatabaseReference recipeDescription = database.getReferenceFromUrl(url+"Recipe/1/Description");
-    private DatabaseReference recipeUtensils = database.getReferenceFromUrl(url+"Recipe/1/Utensils");
+    private DatabaseReference recipeName = database.getReferenceFromUrl(url + "Recipe/1/rName");
+    private DatabaseReference recipeURL = database.getReferenceFromUrl(url + "Recipe/1/rVideo");
+    private DatabaseReference recipeDuration = database.getReferenceFromUrl(url + "Recipe/1/rTime");
+    private DatabaseReference likeCount = database.getReferenceFromUrl(url + "Recipe/1/likes");
+    private DatabaseReference recipeDescription = database.getReferenceFromUrl(url + "Recipe/1/Description");
+    private DatabaseReference recipeUtensils = database.getReferenceFromUrl(url + "Recipe/1/Utensils");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class RecipeView extends AppCompatActivity {
             }
         });
 
-        ScrollView scrollView =findViewById(R.id.scrollView);
+        ScrollView scrollView = findViewById(R.id.scrollView);
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
@@ -168,7 +169,7 @@ public class RecipeView extends AppCompatActivity {
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadTask download = new downloadTask(getApplicationContext(),url);
+                downloadTask download = new downloadTask(getApplicationContext(), url);
                 int downloadRequest = download.download();
             }
         });
@@ -179,7 +180,7 @@ public class RecipeView extends AppCompatActivity {
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isFav == false) {
+                if (isFav == false) {
                     int count = Integer.parseInt(favoriteText.getText().toString());
                     count = count + 1;
                     String value = String.valueOf(count);
@@ -187,8 +188,7 @@ public class RecipeView extends AppCompatActivity {
                     favorite.setBackgroundResource(R.drawable.ic_favorite_filled);
                     isFav = true;
                     likeCount.setValue(value);
-                }
-                else{
+                } else {
                     int count = Integer.parseInt(favoriteText.getText().toString());
                     count = count - 1;
                     String value = String.valueOf(count);
@@ -208,13 +208,12 @@ public class RecipeView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int count = Integer.parseInt(serving.getText().toString());
-                if (count>1) {
+                if (count > 1) {
                     count--;
                     String value = String.valueOf(count);
                     serving.setText(value);
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Serving cannot be less than 1",Toast.LENGTH_SHORT);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Serving cannot be less than 1", Toast.LENGTH_SHORT);
                 }
             }
         });
