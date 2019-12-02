@@ -206,7 +206,7 @@ public class SearchFragment extends Fragment {
                             String ID = String.valueOf(position);
                             Intent intent = new Intent(getContext(), RecipeView.class);
                             getContext().startActivity(intent);
-                            intent.putExtra("recipeID",ID);
+                            intent.putExtra("recipeID",position);
                         }
 
                         @Override

@@ -62,10 +62,7 @@ public class RecipeView extends AppCompatActivity {
         Intent intent =getIntent();
         recipeID = intent.getStringExtra("recipeID");
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
 
         recipeName = database.getReferenceFromUrl(url+"Recipe/"+recipeID+"/rName");
         recipeURL = database.getReferenceFromUrl(url+"Recipe/1/rVideo");
