@@ -1,11 +1,7 @@
 package com.justifiers.foodchef.Instructions;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.justifiers.foodchef.Utilities.LanguageManager;
-
 import java.io.Serializable;
 
 public class InstructionItem implements Serializable {
