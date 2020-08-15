@@ -15,4 +15,6 @@ To fulfil the main goal, we created a page that has video, a list of ingredients
 
 # Project Screenshots 
 
-![Home Page](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image004.jpg) ![Recipe View Page](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image005.jpg) 
+![Home Page](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image004.jpg)   ![Recipe View Page](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image005.jpg) 
+
+![Speech To Text](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image003.jpg)  ![Localization](https://github.com/sehgalromal/FoodChef/blob/master/project_screenshots/image010.jpg)   
